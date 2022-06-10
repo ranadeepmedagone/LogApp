@@ -19,12 +19,12 @@ public record TagTypeDTO
 
 }
 
-public record CreateTagTypeDTO
-{
-    [JsonPropertyName("type_name")]
-    [Required]
-    [MaxLength(255)]
+// public record CreateTagTypeDTO
+// {
+//     [JsonPropertyName("type_name")]
+//     [Required]
+//     [MaxLength(255)]
 
-    public string TypeName { get; set; }
+//     public string TypeName { get; set; }
 
-}
+// }

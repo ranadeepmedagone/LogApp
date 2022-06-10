@@ -13,7 +13,10 @@ public interface ILogRepository
     Task DeleteLog(int Id);
 
     Task<List<Tag>> GetLogTagsById(int Id);
-
+    Task<List<User>> LogUpdatedByUser(int id);
+    // Task StoreSeenId(int Id, long id);
+    // Task<List<LogSeen>> LogSeen(int id);
+    // Task<Log> StoreSeenId(int userid, long id);
 }
 
 public class LogRepository : BaseRepository, ILogRepository
@@ -86,4 +89,52 @@ public class LogRepository : BaseRepository, ILogRepository
         }
     }
 
+    public async Task<List<User>> LogUpdatedByUser(int id)
+    {
+        var query = $@"SELECT * FROM ""{TableNames.user}"" u LEFT JOIN ""{TableNames.log}"" l ON l.updated_by_user_id = u.id  WHERE  l.id = @Id ";
+
+        using (var con = NewConnection)
+        {
+            var res = (await con.QueryAsync<User>(query, new { id })).AsList();
+            return res;
+        }
+    }
+
+    // public async Task StoreSeenId(int Id, long id)
+    // {
+    //     var query = $@"INSERT INTO ""{TableNames.log_seen}"" (user_id, log_id) 
+    //   VALUES (@UserId, @LogId)
+    //     RETURNING *";
+
+
+    //     using (var con = NewConnection)
+    //     {
+    //         var res = await con.QuerySingleOrDefaultAsync(query, new { Id, id });
+
+    //     }
+    // }
+
+    // public async Task<List<LogSeen>> LogSeen(int id)
+    // {
+    //     var query = $@"SELECT * FROM ""{TableNames.log}"" l LEFT JOIN ""{TableNames.log_seen}"" ls ON ls.log_id = l.id ";
+    //     using (var con = NewConnection)
+    //     {
+    //         var res = (await con.QueryAsync<LogSeen>(query, new { id })).AsList();
+    //         return res;
+    //     }
+    // }
+
+    // public  async Task<Log> StoreSeenId(int userid, long id)
+    // {
+    //     var query = $@"INSERT INTO ""{TableNames.log_seen}"" (user_id, log_id) 
+    //    VALUES (@UserId, @LogId)
+    //    RETURNING *";
+
+
+    //     using (var con = NewConnection)
+    //     {
+    //         var res = await con.QuerySingleOrDefaultAsync<Log>(query, userid,   new{id} );
+    //         return null;
+    //     }
+    // }
 }

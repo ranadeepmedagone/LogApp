@@ -42,7 +42,44 @@ public record UserDTO
     [JsonPropertyName("tags")]
 
     public List<TagDTO> ListOfTags { get; set; }
+
+
+}
+
+public record UserLoginDTO
+{
+    [Required]
+    [JsonPropertyName("email")]
+    [MaxLength(255)]
+    public string Email { get; set; }
+
+    [Required]
+    [JsonPropertyName("hash_password")]
+    public string HashPassword { get; set; }
+
     
+
+
+
+}
+
+
+public record UserLoginResDTO
+{
+    [JsonPropertyName("token")]
+    public string Token { get; set; }
+
+    [JsonPropertyName("email")]
+    public string Email { get; set; }
+
+    [JsonPropertyName("id")]
+    public int Id { get; set; }
+
+    [JsonPropertyName("is_superuser")]
+
+    public bool IsSuperUser { get; set; }
+
+
 
 }
 
@@ -65,7 +102,8 @@ public record UserCreateDTO
 
 }
 
-public record UserUpdateDTO{
+public record UserUpdateDTO
+{
     [JsonPropertyName("name")]
     [Required]
     [MaxLength(255)]

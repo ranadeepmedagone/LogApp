@@ -12,7 +12,7 @@ public interface ITagRepository
     Task<Tag> CreateTag(Tag Item);
     Task<bool> UpdateTag(Tag Item);
     Task DeleteTag(int Id);
-    Task<List<Log>> GetTagLogsById(int Id);
+    // Task<List<Log>> GetTagLogsById(int Id);
     Task<List<TagType>> GetTagTypesByTagId(int id);
 
     // Task<List<Tag>> GetTagTagsById(int Id);
@@ -56,16 +56,16 @@ public class TagRepository : BaseRepository, ITagRepository
             return (await con.QueryAsync<Tag>(query)).AsList();
     }
 
-    public async Task<List<Log>> GetTagLogsById(int Id)
-    {
-        var query = $@"SELECT * FROM ""{TableNames.log}"" l LEFT JOIN ""{TableNames.log_tag}"" lt ON lt.tag_id = l.id  WHERE  lt.log_id = @Id ";
+    // public async Task<List<Log>> GetTagLogsById(int Id)
+    // {
+    //     var query = $@"SELECT * FROM ""{TableNames.log}"" l LEFT JOIN ""{TableNames.log_tag}"" lt ON lt.tag_id = l.id  WHERE  lt.log_id = @Id ";
 
-        using (var con = NewConnection)
-        {
-            var res = (await con.QueryAsync<Log>(query, new { Id })).AsList();
-            return res;
-        }
-    }
+    //     using (var con = NewConnection)
+    //     {
+    //         var res = (await con.QueryAsync<Log>(query, new { Id })).AsList();
+    //         return res;
+    //     }
+    // }
 
     // public async Task<List<Tag>> GetTagTagsById(int Id)
     // {
@@ -81,10 +81,10 @@ public class TagRepository : BaseRepository, ITagRepository
 
     public async Task<Tag> GetTagById(int Id)
     {
-        // var query = $@"SELECT * FROM ""{TableNames.tag}"" t LEFT JOIN ""{TableNames.tag_type}"" tt ON tt.id = t.id WHERE t.id = @Id";
-        var query = $@"SELECT * FROM ""{TableNames.tag}""  WHERE id = @Id";
+        // var query = $@"SELECT t.typename AS TagType * FROM ""{TableNames.tag}"" t LEFT JOIN ""{TableNames.tag_type}"" tt ON tt.id = t.type_id WHERE t.id = @Id";
+        // var query = $@"SELECT * FROM ""{TableNames.tag}""  WHERE id = @Id";
 
-
+        var query = $@"SELECT tt.* FROM ""{TableNames.tag}"" t LEFT JOIN ""{TableNames.tag_type}"" tt ON tt.id = t.type_id WHERE t.id = @Id";
         using (var con = NewConnection)
             return await con.QuerySingleOrDefaultAsync<Tag>(query, new { Id });
     }
@@ -113,4 +113,4 @@ public class TagRepository : BaseRepository, ITagRepository
         }
     }
 
-} 
+}

@@ -2,6 +2,7 @@
 using logapp.DTOs;
 using logapp.Models;
 using logapp.Repositories;
+using logapp.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -44,13 +45,31 @@ public class LogController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Log>> GetLogById([FromRoute] int id)
     {
+        // var userId = User.Claims.FirstOrDefault(c => c.Type == UserConstants.Id)?.Value;
+
         var res = await _Log.GetLogById(id);
+
 
         if (res is null)
             return NotFound("No Log found with given id");
-
+        // var Id = int.Parse(userId);
+        // await _Log.StoreSeenId(Id, res.Id); 
         var dto = res.asDto;
         dto.ListOfTags = (await _Log.GetLogTagsById(id)).Select(x => x.asDto).ToList();
+        dto.UpdatedByUser = (await _Log.LogUpdatedByUser(id)).Select(x => x.asDto).ToList();
+
+
+
+        // if(){
+        //        var result = await _Log.StoreSeenId(userId);
+
+        //  if (result is null)
+        //     return NotFound("No Log found with given id");
+        // }
+
+
+
+        // dto.LogSeenBy = (await _Log.LogSeen(id)).Select(x => x.asDto).ToList();
 
 
 
@@ -82,6 +101,7 @@ public class LogController : ControllerBase
     public async Task<ActionResult> UpdateLog([FromRoute] int id,
     [FromBody] UpdateLogDTO Data)
     {
+
         var existing = await _Log.GetLogById(id);
         if (existing is null)
             return NotFound("No Log found with given id");

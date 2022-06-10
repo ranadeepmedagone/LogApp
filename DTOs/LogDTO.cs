@@ -42,10 +42,19 @@ public record LogDTO
 
     public bool PartiaLlyDeleted { get; set; }
 
+    // [JsonPropertyName("log_seen")]
+
+    // public List<LogSeenDTO> LogSeenBy { get; set; }
+
+
 
     [JsonPropertyName("tags")]
 
     public List<TagDTO> ListOfTags { get; set; }
+
+    [JsonPropertyName("user")]
+
+    public List<UserDTO> UpdatedByUser { get; set; }
 
 
 }

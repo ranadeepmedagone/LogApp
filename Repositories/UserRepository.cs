@@ -10,7 +10,10 @@ public interface IUserRepository
     Task<User> GetUserById(int Id);
     Task<User> CreateUser(User Item);
     Task<bool> UpdateUser(User Item);
-    Task DeleteUser(int Id);
+    // Task DeleteUser(int Id);
+
+    Task<User> GetByEmail(string Email);
+
 
     Task<List<Tag>> GetUserTagsById(int Id);
 
@@ -37,13 +40,27 @@ public class UserRepository : BaseRepository, IUserRepository
         }
     }
 
-    public async Task DeleteUser(int Id)
+    public async Task<User> GetByEmail(string Email)
     {
-        var query = $@"DELETE FROM ""{TableNames.user}"" WHERE id = @Id";
+        {
+            var query = $@"SELECT * FROM ""{TableNames.user}""
+        WHERE email = @Email";
+    
+            using (var con = NewConnection)
 
-        using (var con = NewConnection)
-            await con.ExecuteAsync(query, new { Id });
+                return await con.QuerySingleOrDefaultAsync<User>(query, new { Email });
+        }
+
+
     }
+
+    // public async Task DeleteUser(int Id)
+    // {
+    //     var query = $@"DELETE FROM ""{TableNames.user}"" WHERE id = @Id";
+
+    //     using (var con = NewConnection)
+    //         await con.ExecuteAsync(query, new { Id });
+    // }
 
     public async Task<List<User>> GetAllUsers()
     {
